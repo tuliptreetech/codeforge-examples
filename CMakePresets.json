@@ -1,0 +1,21 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "qpcpp-example",
+      "generator": "Ninja",
+      "displayName": "QPCPP example",
+      "hidden": false,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "DEBUG",
+        "CMAKE_QPCPP_EXAMPLE": true
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "qppcpp-example",
+      "configurePreset": "qpcpp-example"
+    }
+  ]
+}

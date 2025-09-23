@@ -1,0 +1,3 @@
+[submodule "qpcpp/codeforge-qpcpp"]
+	path = qpcpp/codeforge-qpcpp
+	url = git@github.com:tuliptreetech/codeforge-qpcpp.git
