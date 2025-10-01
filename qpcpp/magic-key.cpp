@@ -2,6 +2,15 @@
 #include <memory>
 #include <cassert>
 #include <vector>
+#include <array>
+#include "codeforge_qf_ctrl.hpp"
+
+static std::array<QP::QEvt const *, 200> testQueueStorage;
+
+enum : uint8_t {
+    RECORDER_PRIORITY = 1,
+    UNIT_UNDER_TEST_PRIORITY
+};
 
 struct ReceivedByte : QP::QEvt
 {
@@ -14,6 +23,14 @@ enum Signals {
     PROCESS_BYTE,
     MAX_SIGNAL
 };
+
+const cms::test::qf_ctrl::MemPoolConfigs pubSubEventMemPoolConfigs = {
+    {sizeof(uint64_t) * 4, 500}, // small event pool
+    {sizeof(uint64_t) * 16, 20}, // medium event pool
+    {sizeof(uint64_t) * 250, 5}, // large event pool
+                                 // FYI for some reason events can't be bigger than 1000 bytes
+};
+
 
 class Example final : public QP::QActive
 {
@@ -98,8 +115,19 @@ Q_STATE_DEF(Example, be_assertive)
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     std::unique_ptr<Example> underTest = std::make_unique<Example>();
+    cms::test::qf_ctrl::Setup(MAX_SIGNAL, 1000, pubSubEventMemPoolConfigs);
+    underTest->start(
+        cms::test::qf_ctrl::UNIT_UNDER_TEST_PRIORITY,
+        testQueueStorage.data(),
+        testQueueStorage.size(),
+        nullptr,
+        0U);
+    cms::test::qf_ctrl::ProcessEvents();
+
     for (size_t i = 0; i < size; ++i) {
         underTest->ReceiveByte(data[i]);
     }
+
+    cms::test::qf_ctrl::Teardown();
     return 0;
 }
