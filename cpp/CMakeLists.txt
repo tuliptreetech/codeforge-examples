@@ -16,3 +16,4 @@ function(create_a_codeforge_fuzzer NAME SOURCES)
 endfunction()
 
 create_a_codeforge_fuzzer(cpp-if-statements if-statements.cpp)
+create_a_codeforge_fuzzer(state-machine state-machine.cpp)
