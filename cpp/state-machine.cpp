@@ -38,41 +38,57 @@ public:
         case STATE_WAITING_FOR_O:
             if (data == 'o') {
                 m_state = STATE_WAITING_FOR_D;
+            } else {
+                m_state = STATE_WAITING_FOR_C;
             }
             break;
         case STATE_WAITING_FOR_D:
             if (data == 'd') {
                 m_state = STATE_WAITING_FOR_E;
+            } else {
+                m_state = STATE_WAITING_FOR_C;
             }
             break;
         case STATE_WAITING_FOR_E:
             if (data == 'e') {
                 m_state = STATE_WAITING_FOR_F;
+            } else {
+                m_state = STATE_WAITING_FOR_C;
             }
             break;
         case STATE_WAITING_FOR_F:
             if (data == 'F') {
                 m_state = STATE_WAITING_FOR_O2;
+            } else {
+                m_state = STATE_WAITING_FOR_C;
             }
             break;
         case STATE_WAITING_FOR_O2:
             if (data == 'o') {
                 m_state = STATE_WAITING_FOR_R;
+            } else {
+                m_state = STATE_WAITING_FOR_C;
             }
             break;
         case STATE_WAITING_FOR_R:
             if (data == 'r') {
                 m_state = STATE_WAITING_FOR_G;
+            } else {
+                m_state = STATE_WAITING_FOR_C;
             }
             break;
         case STATE_WAITING_FOR_G:
             if (data == 'g') {
                 m_state = STATE_WAITING_FOR_E2;
+            } else {
+                m_state = STATE_WAITING_FOR_C;
             }
             break;
         case STATE_WAITING_FOR_E2:
             if (data == 'e') {
-                assert("being assertive");
+                assert(!"being assertive");
+            } else {
+                m_state = STATE_WAITING_FOR_C;
             }
             break;
         }
@@ -90,7 +106,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     std::unique_ptr<Example> underTest = std::make_unique<Example>();
     for (size_t i = 0; i < size; ++i) {
-        underTest->ReceiveData({data[i]});
+        underTest->ReceiveData(data[i]);
     }
 
     return 0;
